@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/auth-api/Dockerfile
-      target: development
+      # target: development
     command: npm run start:dev auth-api
     ports:
       - '9000:9000'
@@ -38,7 +38,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/application-api/Dockerfile
-      target: development
+      # target: development
     command: npm run start:dev application-api
     env_file:
       - ./apps/application-api/.env
@@ -68,7 +68,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/external-api/Dockerfile
-      target: development
+      # target: development
     command: npm run start:dev external-api
     env_file:
       - ./apps/external-api/.env
@@ -98,7 +98,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/notification-api/Dockerfile
-      target: development
+      # target: development
     command: npm run start:dev notification-api
     env_file:
       - ./apps/notification-api/.env
@@ -127,7 +127,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/files-api/Dockerfile
-      target: development
+      # target: development
     command: npm run start:dev files-api
     env_file:
       - ./apps/files-api/.env
