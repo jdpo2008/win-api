@@ -1,0 +1,43 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: auth-api
+    host: auth
+    port: 9000
+    protocol: http
+    routes:
+      - name: auth-route
+        paths:
+          - /api/v1/auth
+          - /api/v1/user
+          - /api/v1/profile
+
+  - name: application-api
+    host: application
+    port: 9001
+    protocol: http
+    routes:
+      - name: application-route
+        paths:
+          - /api/v1/product
+          - /api/v1/service
+          - /api/v1/feature
+
+  - name: external-api
+    host: external
+    port: 9002
+    protocol: http
+    routes:
+      - name: external-route
+        paths:
+          - /api/v1/external
+
+  - name: file-api
+    host: file
+    port: 9003
+    protocol: http
+    routes:
+      - name: file-route
+        paths:
+          - /api/v1/file

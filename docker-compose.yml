@@ -1,0 +1,282 @@
+version: "3.9"
+
+services:
+
+  auth:
+    container_name: win_auth_api_container
+    build:
+      context: .
+      dockerfile: ./apps/auth-api/Dockerfile
+      target: development
+    command: npm run start:dev auth-api
+    ports:
+      - '9000:9000'
+    networks:
+      - win-docker-network
+    env_file:
+      - ./apps/auth-api/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+      - fluent-bit
+
+    environment: 
+      DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
+      WAIT_HOSTS: postgres:5432, rabbitmq:5672
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: auth-service
+
+  application:
+    container_name: win_application_api_container
+    build:
+      context: .
+      dockerfile: ./apps/application-api/Dockerfile
+      target: development
+    command: npm run start:dev application-api
+    env_file:
+      - ./apps/application-api/.env
+    depends_on:
+      - postgres
+      - fluent-bit
+      - auth
+    environment: 
+      DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
+      WAIT_HOSTS: postgres:5432, rabbitmq:5672
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '9001:9001'
+    networks:
+      - win-docker-network
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: application-service
+
+  external:
+    container_name: win_externa_api_container
+    build:
+      context: .
+      dockerfile: ./apps/external-api/Dockerfile
+      target: development
+    command: npm run start:dev external-api
+    env_file:
+      - ./apps/external-api/.env
+    depends_on:
+      - postgres
+      - fluent-bit
+      - auth
+    environment: 
+      DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
+      WAIT_HOSTS: postgres:5432, rabbitmq:5672
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '9002:9002'
+    networks:
+      - win-docker-network
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: external-service
+
+  notification:
+    container_name: win_notification_api_container
+    build:
+      context: .
+      dockerfile: ./apps/notification-api/Dockerfile
+      target: development
+    command: npm run start:dev notification-api
+    env_file:
+      - ./apps/notification-api/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+      - fluent-bit
+      - auth
+    environment: 
+      DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
+      WAIT_HOSTS: postgres:5432, rabbitmq:5672
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - win-docker-network 
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: notification-service
+
+  files:
+    container_name: win_files_api_container
+    build:
+      context: .
+      dockerfile: ./apps/files-api/Dockerfile
+      target: development
+    command: npm run start:dev files-api
+    env_file:
+      - ./apps/files-api/.env
+    depends_on:
+      - postgres
+      - rabbitmq
+      - fluent-bit
+      - auth
+    environment: 
+      DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
+      WAIT_HOSTS: postgres:5432, rabbitmq:5672
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '9003:9003'
+    networks:
+      - win-docker-network 
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: files-service
+
+  rabbitmq:
+    container_name: win_rabbitmq_container
+    image: rabbitmq:management-alpine
+    volumes:
+      - rabbit_data:/var/lib/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - win-docker-network
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: rabbitmq
+
+  postgres:
+    container_name: win_postgres_container
+    image: postgres
+    ports:
+        - "5432:5432"
+    networks:
+      - win-docker-network
+    environment: 
+        POSTGRES_USER: admin
+        POSTGRES_PASSWORD: Pr0ct0r1n6+-WIN
+        POSTGRES_DB: WIN
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/data
+      # - ./dbscripts/postgres:/docker-entrypoint-initdb.d
+    restart: on-failure
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: postgresdb
+
+  kong:
+    build:
+      context: ./kong
+      dockerfile: Dockerfile
+    container_name: win-kong-container
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /usr/src/app/kong/declarative/kong.yml
+      KONG_PROXY_LISTEN: 0.0.0.0:8080
+      KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
+      KONG_ADMIN_LISTEN: 0.0.0.0:9000
+    restart: always
+    networks:
+      - win-docker-network 
+    command: "kong start"
+    depends_on:
+      - fluent-bit
+    ports:
+      - "8000:8000"
+      - "8443:8443"
+      - "8001:8001"
+      - "7946:7946"
+      - "7946:7946/udp"
+    logging:
+      driver: fluentd
+      options:
+        fluentd-async: "true"
+        fluentd-address: 192.168.29.38:24224
+        tag: kong
+
+  kong-dashboard:
+    image: pgbi/kong-dashboard
+    container_name: kong-dashboard
+    ports:
+      - "8080:8080"
+
+  fluent-bit:
+    container_name: fluent-bit
+    environment:
+      LOKI_URL: http://loki:3100/loki/api/v1/push
+    build:
+      context: ./fluent-bit
+      dockerfile: Dockerfile
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    networks:
+      - loki
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    expose:
+      - "3100"
+    networks:
+      - loki
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3200:3200"
+    environment:
+      GF_RENDERING_SERVER_URL: http://renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3200/
+      GF_LOG_FILTERS: rendering:debug
+    networks:
+      - loki
+
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    container_name: grafana-image-renderer
+    expose:
+      - "8081"
+    environment:
+      ENABLE_METRICS: "true"
+    networks:
+      - loki
+ 
+networks:
+  win-docker-network:
+    driver: bridge
+  loki:
+    driver: bridge
+
+volumes:
+  postgres-db-data:
+  rabbit_data:
