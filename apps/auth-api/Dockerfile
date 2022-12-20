@@ -6,7 +6,10 @@ USER node
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-RUN npm ci
+
+RUN npm install glob rimraf
+
+RUN npm install 
 
 COPY --chown=node:node . .
 RUN npm run build \
