@@ -1,4 +1,4 @@
-FROM node:16-alpine as builder
+FROM node:alpine as builder
 
 ENV NODE_ENV build
 
@@ -15,7 +15,7 @@ RUN npm run build \
 
 # ---
 
-FROM node:16-alpine
+FROM node:alpine as production
 
 ENV NODE_ENV production
 
