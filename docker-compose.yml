@@ -13,6 +13,7 @@ services:
       - '9000:9000'
     networks:
       - win-docker-network
+      - default
     env_file:
       - ./apps/auth-api/.env
     depends_on:
@@ -55,6 +56,7 @@ services:
       - '9001:9001'
     networks:
       - win-docker-network
+      - default
     # logging:
     #   driver: fluentd
     #   options:
@@ -85,6 +87,7 @@ services:
       - '9002:9002'
     networks:
       - win-docker-network
+      - default
     # logging:
     #   driver: fluentd
     #   options:
@@ -114,6 +117,7 @@ services:
       - /usr/src/app/node_modules
     networks:
       - win-docker-network 
+      - default
     # logging:
     #   driver: fluentd
     #   options:
@@ -145,6 +149,7 @@ services:
       - '9003:9003'
     networks:
       - win-docker-network 
+      - default
     # logging:
     #   driver: fluentd
     #   options:
@@ -162,6 +167,7 @@ services:
       - 15672:15672
     networks:
       - win-docker-network
+      - default
     # logging:
     #   driver: fluentd
     #   options:
@@ -176,6 +182,7 @@ services:
         - "5432:5432"
     networks:
       - win-docker-network
+      - default
     environment: 
         POSTGRES_USER: admin
         POSTGRES_PASSWORD: Pr0ct0r1n6+-WIN
@@ -205,6 +212,7 @@ services:
     restart: always
     networks:
       - win-docker-network 
+      - default
     command: "kong start"
     # depends_on:
     #   - fluent-bit
@@ -273,6 +281,7 @@ services:
 networks:
   win-docker-network:
     driver: bridge
+    attachable: true
   # loki:
   #   driver: bridge
 
