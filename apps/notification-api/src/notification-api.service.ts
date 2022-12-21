@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { NotificationDto } from './dto/notification.dto';
@@ -19,7 +20,7 @@ export class NotificationApiService {
   sendPostulacionNotification(data: any) {
     const request: NotificationDto = {
       to: data.email,
-      from: 'seleccion_win@cambiateawin.pe',
+      from: 'soporte_win@cambiateawin.pe',
       subject: 'Postulacion Solicitada',
       html: `
         <p>Estimado ${data.nombres} ${data.apellidos},</p>
