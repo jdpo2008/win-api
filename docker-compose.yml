@@ -18,20 +18,19 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-      - fluent-bit
-
+      # - fluent-bit
     environment: 
       DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
       WAIT_HOSTS: postgres:5432, rabbitmq:5672
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: auth-service
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: auth-service
 
   application:
     container_name: win_application_api_container
@@ -44,7 +43,7 @@ services:
       - ./apps/application-api/.env
     depends_on:
       - postgres
-      - fluent-bit
+      # - fluent-bit
       - auth
     environment: 
       DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
@@ -86,12 +85,12 @@ services:
       - '9002:9002'
     networks:
       - win-docker-network
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: external-service
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: external-service
 
   notification:
     container_name: win_notification_api_container
@@ -105,7 +104,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-      - fluent-bit
+      # - fluent-bit
       - auth
     environment: 
       DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
@@ -115,12 +114,12 @@ services:
       - /usr/src/app/node_modules
     networks:
       - win-docker-network 
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: notification-service
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: notification-service
 
   files:
     container_name: win_files_api_container
@@ -134,7 +133,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-      - fluent-bit
+      # - fluent-bit
       - auth
     environment: 
       DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
@@ -146,12 +145,12 @@ services:
       - '9003:9003'
     networks:
       - win-docker-network 
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: files-service
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: files-service
 
   rabbitmq:
     container_name: win_rabbitmq_container
@@ -163,12 +162,12 @@ services:
       - 15672:15672
     networks:
       - win-docker-network
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: rabbitmq
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: rabbitmq
 
   postgres:
     container_name: win_postgres_container
@@ -185,12 +184,12 @@ services:
       - postgres-db-data:/var/lib/postgresql/data
       - ./dbscripts/postgres:/docker-entrypoint-initdb.d
     restart: on-failure
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: postgresdb
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: postgresdb
 
   kong:
     build:
@@ -207,20 +206,20 @@ services:
     networks:
       - win-docker-network 
     command: "kong start"
-    depends_on:
-      - fluent-bit
+    # depends_on:
+    #   - fluent-bit
     ports:
       - "8000:8000"
       - "8443:8443"
       - "8001:8001"
       - "7946:7946"
       - "7946:7946/udp"
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: kong
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: kong
 
   kong-dashboard:
     image: pgbi/kong-dashboard
@@ -228,54 +227,54 @@ services:
     ports:
       - "8080:8080"
 
-  fluent-bit:
-    container_name: fluent-bit
-    environment:
-      LOKI_URL: http://loki:3100/loki/api/v1/push
-    build:
-      context: ./fluent-bit
-      dockerfile: Dockerfile
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
-    networks:
-      - loki
+  # fluent-bit:
+  #   container_name: fluent-bit
+  #   environment:
+  #     LOKI_URL: http://loki:3100/loki/api/v1/push
+  #   build:
+  #     context: ./fluent-bit
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "24224:24224"
+  #     - "24224:24224/udp"
+  #   networks:
+  #     - loki
 
-  loki:
-    image: grafana/loki:latest
-    container_name: loki
-    expose:
-      - "3100"
-    networks:
-      - loki
+  # loki:
+  #   image: grafana/loki:latest
+  #   container_name: loki
+  #   expose:
+  #     - "3100"
+  #   networks:
+  #     - loki
 
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    ports:
-      - "3200:3200"
-    environment:
-      GF_RENDERING_SERVER_URL: http://renderer:8081/render
-      GF_RENDERING_CALLBACK_URL: http://grafana:3200/
-      GF_LOG_FILTERS: rendering:debug
-    networks:
-      - loki
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   container_name: grafana
+  #   ports:
+  #     - "3200:3200"
+  #   environment:
+  #     GF_RENDERING_SERVER_URL: http://renderer:8081/render
+  #     GF_RENDERING_CALLBACK_URL: http://grafana:3200/
+  #     GF_LOG_FILTERS: rendering:debug
+  #   networks:
+  #     - loki
 
-  renderer:
-    image: grafana/grafana-image-renderer:latest
-    container_name: grafana-image-renderer
-    expose:
-      - "8081"
-    environment:
-      ENABLE_METRICS: "true"
-    networks:
-      - loki
+  # renderer:
+  #   image: grafana/grafana-image-renderer:latest
+  #   container_name: grafana-image-renderer
+  #   expose:
+  #     - "8081"
+  #   environment:
+  #     ENABLE_METRICS: "true"
+  #   networks:
+  #     - loki
  
 networks:
   win-docker-network:
     driver: bridge
-  loki:
-    driver: bridge
+  # loki:
+  #   driver: bridge
 
 volumes:
   postgres-db-data:
