@@ -55,12 +55,12 @@ services:
       - '9001:9001'
     networks:
       - win-docker-network
-    logging:
-      driver: fluentd
-      options:
-        fluentd-async: "true"
-        fluentd-address: 192.168.29.38:24224
-        tag: application-service
+    # logging:
+    #   driver: fluentd
+    #   options:
+    #     fluentd-async: "true"
+    #     fluentd-address: 192.168.29.38:24224
+    #     tag: application-service
 
   external:
     container_name: win_externa_api_container
@@ -73,7 +73,7 @@ services:
       - ./apps/external-api/.env
     depends_on:
       - postgres
-      - fluent-bit
+      # - fluent-bit
       - auth
     environment: 
       DATABASE_URL: 'postgres://admin:Pr0ct0r1n6+-WIN@postgres:5432/WIN'
