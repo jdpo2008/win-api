@@ -26,8 +26,8 @@ export class ProductService {
 
     queryBuilder
       .innerJoinAndSelect('p.servicios', 'servicios')
-      .innerJoinAndSelect('servicios.caracteristicas', 'caracteristicas')
-      .innerJoinAndSelect('servicios.equipos', 'equipos')
+      .leftJoinAndSelect('servicios.caracteristicas', 'caracteristicas')
+      .leftJoinAndSelect('servicios.equipos', 'equipos')
       .where('p.active = :active', { active: true })
       .orderBy('p.createdAt', paginationDto.order)
       .skip(paginationDto.skip)
