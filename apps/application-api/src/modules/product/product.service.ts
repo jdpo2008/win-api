@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { PageDto, PageMetaDto, PaginationDto, Product } from '@lib/common';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -26,6 +27,7 @@ export class ProductService {
     queryBuilder
       .innerJoinAndSelect('p.servicios', 'servicios')
       .innerJoinAndSelect('servicios.caracteristicas', 'caracteristicas')
+      .innerJoinAndSelect('servicios.equipos', 'equipos')
       .where('p.active = :active', { active: true })
       .orderBy('p.createdAt', paginationDto.order)
       .skip(paginationDto.skip)
