@@ -235,6 +235,10 @@ services:
     ports:
       - "8080:8080"
 
+volumes:
+  postgres-db-data:
+  rabbit_data:
+  
   # fluent-bit:
   #   container_name: fluent-bit
   #   environment:
@@ -277,14 +281,10 @@ services:
   #     ENABLE_METRICS: "true"
   #   networks:
   #     - loki
- 
-networks:
-  win-docker-network:
-    driver: bridge
-    attachable: true
+# networks:
+#   win-docker-network:
+#     driver: bridge
+#     attachable: true
   # loki:
   #   driver: bridge
 
-volumes:
-  postgres-db-data:
-  rabbit_data:
