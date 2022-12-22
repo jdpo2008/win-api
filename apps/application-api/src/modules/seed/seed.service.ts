@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import {
@@ -292,6 +293,9 @@ export class SeedService {
           feature01,
           feature02,
           feature03,
+          feature04,
+          feature05,
+          feature06,
           feature07,
           feature08,
           feature09,
@@ -314,6 +318,9 @@ export class SeedService {
           feature02,
           feature03,
           feature04,
+          feature04,
+          feature05,
+          feature06,
           feature07,
           feature08,
           feature09,
@@ -336,6 +343,9 @@ export class SeedService {
           feature02,
           feature03,
           feature04,
+          feature04,
+          feature05,
+          feature06,
           feature07,
           feature08,
           feature09,

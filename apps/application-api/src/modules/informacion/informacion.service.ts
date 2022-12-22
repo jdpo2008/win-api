@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
