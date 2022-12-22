@@ -12,7 +12,7 @@ services:
     ports:
       - '9000:9000'
     networks:
-      # - win-docker-network
+      - win-docker-network
       - default
     env_file:
       - ./apps/auth-api/.env
@@ -55,7 +55,7 @@ services:
     ports:
       - '9001:9001'
     networks:
-      # - win-docker-network
+      - win-docker-network
       - default
     # logging:
     #   driver: fluentd
@@ -86,8 +86,8 @@ services:
     ports:
       - '9002:9002'
     networks:
-      # - win-docker-network
-      - default
+      - win-docker-network
+  
     # logging:
     #   driver: fluentd
     #   options:
@@ -116,7 +116,7 @@ services:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     networks:
-      # - win-docker-network 
+      - win-docker-network 
       - default
     # logging:
     #   driver: fluentd
@@ -148,8 +148,8 @@ services:
     ports:
       - '9003:9003'
     networks:
-      # - win-docker-network 
-      - default
+      - win-docker-network 
+      
     # logging:
     #   driver: fluentd
     #   options:
@@ -166,7 +166,7 @@ services:
       - 5672:5672
       - 15672:15672
     networks:
-      # - win-docker-network
+      - win-docker-network
       - default
     # logging:
     #   driver: fluentd
@@ -181,7 +181,7 @@ services:
     ports:
         - "5432:5432"
     networks:
-      # - win-docker-network
+      - win-docker-network
       - default
     environment: 
         POSTGRES_USER: admin
@@ -211,7 +211,7 @@ services:
       KONG_ADMIN_LISTEN: 0.0.0.0:9000
     restart: always
     networks:
-      # - win-docker-network 
+      - win-docker-network 
       - default
     command: "kong start"
     # depends_on:
@@ -235,10 +235,6 @@ services:
     ports:
       - "8080:8080"
 
-volumes:
-  postgres-db-data:
-  rabbit_data:
-  
   # fluent-bit:
   #   container_name: fluent-bit
   #   environment:
@@ -281,10 +277,14 @@ volumes:
   #     ENABLE_METRICS: "true"
   #   networks:
   #     - loki
-# networks:
-#   win-docker-network:
-#     driver: bridge
-#     attachable: true
+ 
+networks:
+  win-docker-network:
+    driver: bridge
+    attachable: true
   # loki:
   #   driver: bridge
 
+volumes:
+  postgres-db-data:
+  rabbit_data:
