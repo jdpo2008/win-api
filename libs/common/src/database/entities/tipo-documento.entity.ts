@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Column, Entity, OneToMany } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { Postulation } from './postulacion.entity';

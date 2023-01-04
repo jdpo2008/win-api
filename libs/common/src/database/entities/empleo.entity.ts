@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
+/* eslint-disable prettier/prettier */
+import { Column, Entity, OneToMany } from 'typeorm';
 import { CommonEntity } from '../common.entity';
 import { Postulation } from './postulacion.entity';
 import { Testimonio } from './testimonio.entity';

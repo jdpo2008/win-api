@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { User } from '@lib/common';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -29,12 +30,14 @@ export class AuthApiService {
       expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
     );
 
-    const token = this.jwtService.sign(tokenPayload);
+    const token = await this.jwtService.sign(tokenPayload);
 
     response.cookie('Authentication', token, {
       httpOnly: true,
       expires,
     });
+
+    return token;
   }
 
   logout(response: Response) {

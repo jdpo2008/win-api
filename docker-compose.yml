@@ -189,7 +189,7 @@ services:
         POSTGRES_DB: WIN
     volumes:
       - postgres-db-data:/var/lib/postgresql/data
-      - ./dbscripts/postgres:/docker-entrypoint-initdb.d
+      # - ./dbscripts/postgres:/docker-entrypoint-initdb.d
     restart: on-failure
     # logging:
     #   driver: fluentd

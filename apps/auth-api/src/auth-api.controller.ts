@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { User } from '@lib/common';
 import { Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
@@ -22,8 +23,8 @@ export class AuthApiController {
     @CurrentUser() user: User,
     @Res({ passthrough: true }) response: Response,
   ) {
-    await this.authApiService.login(user, response);
-    response.send(user);
+    const token = await this.authApiService.login(user, response);
+    return response.status(200).json({ ...user, token });
   }
 
   @UseGuards(JwtAuthGuard)
