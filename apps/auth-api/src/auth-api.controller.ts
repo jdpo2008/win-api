@@ -23,8 +23,9 @@ export class AuthApiController {
     @CurrentUser() user: User,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const token = await this.authApiService.login(user, response);
-    return response.status(200).json({ ...user, token });
+    // const token = await this.authApiService.login(user, response);
+    // return response.status(200).json({ ...user, token });
+    return await this.authApiService.login(user, response);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ResponseInterceptor } from '@lib/common';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -7,6 +8,7 @@ import { ApplicationApiModule } from './application-api.module';
 async function bootstrap() {
   const app = await NestFactory.create(ApplicationApiModule);
   app.enableCors({ origin: '*' });
+
   const moduleRef = app.select(ApplicationApiModule);
   const reflector = moduleRef.get(Reflector);
 
