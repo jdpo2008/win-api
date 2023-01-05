@@ -1,15 +1,5 @@
 version: "3.8"
 
-networks:
-  win-docker-network:
-    driver: bridge
-    attachable: true
-  # loki:
-  #   driver: bridge
-
-volumes:
-  postgres-db-data:
-  rabbit_data:
 services:
 
   auth:
@@ -201,6 +191,17 @@ services:
       - postgres-db-data:/var/lib/postgresql/data
       # - ./dbscripts/postgres:/docker-entrypoint-initdb.d
     restart: on-failure
+
+networks:
+  win-docker-network:
+    driver: bridge
+    attachable: true
+  # loki:
+  #   driver: bridge
+
+volumes:
+  postgres-db-data:
+  rabbit_data:
     # logging:
     #   driver: fluentd
     #   options:
