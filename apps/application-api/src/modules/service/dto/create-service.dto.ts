@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Feature } from '@lib/common';
 import {
   IsArray,

@@ -62,18 +62,29 @@ export class SeedService {
       });
 
       const product02 = await queryRunner.manager.create(Product, {
-        nombre: 'WIN INTERNET + DIRECT GO',
+        nombre: 'WIN DUOS',
         descripcion: 'producto 2 que se ofrece',
         createdBy: user.id,
       });
 
       const product03 = await queryRunner.manager.create(Product, {
-        nombre: 'WIN INTERNET GAMER',
+        nombre: 'WIN TRIOS',
         descripcion: 'producto 3 que se ofrece',
         createdBy: user.id,
       });
 
-      await queryRunner.manager.save([product01, product02, product03]);
+      const product04 = await queryRunner.manager.create(Product, {
+        nombre: 'WIN GAMER',
+        descripcion: 'producto 4 que se ofrece',
+        createdBy: user.id,
+      });
+
+      await queryRunner.manager.save([
+        product01,
+        product02,
+        product03,
+        product04,
+      ]);
 
       // Se crean los equipos
       const equipo01 = await queryRunner.manager.create(Equipo, {
@@ -217,9 +228,9 @@ export class SeedService {
       });
 
       const service04 = await queryRunner.manager.create(Service, {
-        nombre: 'Internet Fibra WIN',
+        nombre: 'Plan Internet + TV Digital Wintv',
         descripcion: '',
-        precio: 149,
+        precio: 109,
         velocidad_actual: '200 Mbps',
         velocidad_anterior: '100 Mbps',
         tiene_promocion: true,
@@ -238,9 +249,9 @@ export class SeedService {
       });
 
       const service05 = await queryRunner.manager.create(Service, {
-        nombre: 'Internet Fibra WIN',
+        nombre: 'Plan Internet + TV Digital Wintv',
         descripcion: '',
-        precio: 194,
+        precio: 179,
         velocidad_actual: '600 Mbps',
         velocidad_anterior: '300 Mbps',
         tiene_promocion: true,
@@ -259,9 +270,9 @@ export class SeedService {
       });
 
       const service06 = await queryRunner.manager.create(Service, {
-        nombre: 'Internet Fibra WIN',
+        nombre: 'Plan Internet + TV Digital Wintv',
         descripcion: '',
-        precio: 274,
+        precio: 269,
         velocidad_actual: '600 Mbps',
         velocidad_anterior: null,
         tiene_promocion: false,
@@ -287,7 +298,7 @@ export class SeedService {
         velocidad_anterior: null,
         tiene_promocion: false,
         promocion: null,
-        producto: product03,
+        producto: product04,
         equipos: [],
         caracteristicas: [
           feature01,
@@ -311,7 +322,7 @@ export class SeedService {
         velocidad_anterior: null,
         tiene_promocion: false,
         promocion: null,
-        producto: product03,
+        producto: product04,
         equipos: [equipo01],
         caracteristicas: [
           feature01,
@@ -336,7 +347,7 @@ export class SeedService {
         velocidad_anterior: null,
         tiene_promocion: false,
         promocion: null,
-        producto: product03,
+        producto: product04,
         equipos: [equipo01],
         caracteristicas: [
           feature01,
