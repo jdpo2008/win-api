@@ -1,30 +1,51 @@
-FROM node:alpine As development
+FROM node:18-alpine As development
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY --chown=node:node package*.json ./
 
-RUN npm install glob rimraf
+RUN npm install
 
-RUN npm install --only=development
+COPY --chown=node:node . .
 
-COPY . .
+USER node
 
-RUN npm run build billing
+###################
+# BUILD FOR PRODUCTION
+###################
 
-FROM node:alpine as production
+FROM node:18-alpine As build
 
+WORKDIR /usr/src/app
+
+COPY --chown=node:node package*.json ./
+
+# In order to run `npm run build` we need access to the Nest CLI which is a dev dependency. In the previous development stage we ran `npm ci` which installed all dependencies, so we can copy over the node_modules directory from the development image
+COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
+
+COPY --chown=node:node . .
+
+# Run the build command which creates the production bundle
+RUN npm run build
+
+# Set NODE_ENV environment variable
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /usr/src/app
+# Running `npm ci` removes the existing node_modules directory and passing in --only=production ensures that only the production dependencies are installed. This ensures that the node_modules directory is as optimized as possible
+RUN npm install --only=production && npm cache clean --force
 
-COPY package*.json ./
+USER node
 
-RUN npm install --only=production
+###################
+# PRODUCTION
+###################
 
-COPY . .
+FROM node:18-alpine As production
 
-COPY --from=development /usr/src/app/dist ./dist
+# Copy the bundled code from the build stage to the production image
+COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node --from=build /usr/src/app/dist ./dist
+
 
 CMD ["node", "dist/apps/notification-api/main"]
